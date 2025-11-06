@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Keeper {
+  id                Int         @id @default(autoincrement())
+  firstName         String
+  lastName          String
+  email             String      @unique
+  passwordHash       String
+  phone             String?
+  role              String      @default("user")
+  assignedEnclosures Enclosure[] @relation("KeeperEnclosures")
+  observations      Observation[]
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+}
+
+model Enclosure {
+  id          Int         @id @default(autoincrement())
+  name        String      @unique
+  biome       String
+  area_m2     Float
+  capacity    Int
+  temperatureTarget Float?
+  animals     Animal[]
+  keepers     Keeper[]    @relation("KeeperEnclosures")
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Animal {
+  id          Int         @id @default(autoincrement())
+  name        String      @unique
+  species     String
+  sex         String?
+  birthDate   DateTime?
+  diet        String?
+  notes       String?
+  enclosure   Enclosure?  @relation(fields: [enclosureId], references: [id])
+  enclosureId Int?
+  observations Observation[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Observation {
+  id          Int       @id @default(autoincrement())
+  animal      Animal    @relation(fields: [animalId], references: [id])
+  animalId    Int
+  keeper      Keeper    @relation(fields: [keeperId], references: [id])
+  keeperId    Int
+  date        DateTime  @default(now())
+  content   String?    @map("note")
+  riskLevel   Int?
+  createdAt   DateTime  @default(now())
+  @@map("Observation")
+}
