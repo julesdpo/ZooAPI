@@ -7,6 +7,116 @@ import { parsePagination, parseSort, pagedResponse } from "../utils/pagination.j
 const prisma = new PrismaClient();
 const router = Router();
 
+
+/**
+ * @swagger
+ * tags:
+ *   name: Animals
+ *   description: Gestion des animaux
+ */
+
+/**
+ * @swagger
+ * /api/animals:
+ *   get:
+ *     summary: Liste paginée des animaux
+ *     tags: [Animals]
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema: { type: integer, minimum: 1 }
+ *       - in: query
+ *         name: limit
+ *         schema: { type: integer, minimum: 1, maximum: 100 }
+ *       - in: query
+ *         name: q
+ *         schema: { type: string }
+ *       - in: query
+ *         name: species
+ *         schema: { type: string }
+ *       - in: query
+ *         name: enclosure
+ *         schema: { type: integer, minimum: 1 }
+ *       - in: query
+ *         name: sort
+ *         schema: { type: string, enum: [species, -species, createdAt, -createdAt] }
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/PagedResponse_Animal' }
+ *
+ *   post:
+ *     summary: Créer un animal
+ *     tags: [Animals]
+ *     security: [{ bearerAuth: [] }]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema: { $ref: '#/components/schemas/AnimalCreate' }
+ *     responses:
+ *       201: { description: Créé }
+ *       401: { description: Token requis }
+ *       422: { description: Données invalides }
+ */
+
+/**
+ * @swagger
+ * /api/animals/{id}:
+ *   get:
+ *     summary: Détail d'un animal
+ *     tags: [Animals]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: integer, minimum: 1 }
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/Animal' }
+ *       404: { description: Non trouvé }
+ *
+ *   put:
+ *     summary: Modifier un animal
+ *     tags: [Animals]
+ *     security: [{ bearerAuth: [] }]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: integer, minimum: 1 }
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema: { $ref: '#/components/schemas/AnimalUpdate' }
+ *     responses:
+ *       200: { description: Modifié }
+ *       401: { description: Token requis }
+ *       404: { description: Non trouvé }
+ *       422: { description: Données invalides }
+ *
+ *   delete:
+ *     summary: Supprimer un animal (admin)
+ *     tags: [Animals]
+ *     security: [{ bearerAuth: [] }]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: integer }
+ *     responses:
+ *       204: { description: Supprimé }
+ *       401: { description: Token requis }
+ *       403: { description: Interdit (admin uniquement) }
+ *       404: { description: Non trouvé }
+ */
+
 /**
  * GET /api/animals
  * Query: page, limit, q (name/species), species, enclosure, sort (species|-createdAt)
@@ -173,3 +283,4 @@ router.delete(
 );
 
 export default router;
+

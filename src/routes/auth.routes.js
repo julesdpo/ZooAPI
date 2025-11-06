@@ -16,6 +16,63 @@ const registerValidators = [
   body("password").isString().isLength({ min: 8 }), // 8+ caractères
 ];
 
+/**
+ * @swagger
+ * tags:
+ *   name: Auth
+ *   description: Inscription/connexion
+ */
+
+/**
+ * @swagger
+ * /auth/register:
+ *   post:
+ *     summary: Inscription
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema: { $ref: '#/components/schemas/RegisterInput' }
+ *     responses:
+ *       201:
+ *         description: Utilisateur créé + token
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/AuthResponse' }
+ *       409:
+ *         description: Email déjà utilisé
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/Error' }
+ *       422:
+ *         description: Données invalides
+ */
+
+/**
+ * @swagger
+ * /auth/login:
+ *   post:
+ *     summary: Connexion
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema: { $ref: '#/components/schemas/LoginInput' }
+ *     responses:
+ *       200:
+ *         description: Connecté + token
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/AuthResponse' }
+ *       401:
+ *         description: Identifiants invalides
+ *       429:
+ *         description: Trop de tentatives (rate limit)
+ */
+
+
 router.post("/register", registerValidators, async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) return res.status(422).json({ errors: errors.array() });
@@ -65,3 +122,4 @@ router.post("/login", loginLimiter, loginValidators, async (req, res) => {
 });
 
 export default router;
+

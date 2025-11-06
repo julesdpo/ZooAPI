@@ -113,6 +113,126 @@ router.post(
   }
 );
 
+
+/**
+ * @swagger
+ * tags:
+ *   name: Observations
+ *   description: Observations d'animaux (liées à un keeper)
+ */
+
+/**
+ * @swagger
+ * /api/observations:
+ *   get:
+ *     summary: Lister les observations (filtrable)
+ *     tags: [Observations]
+ *     security: [{ bearerAuth: [] }]
+ *     parameters:
+ *       - in: query
+ *         name: animalId
+ *         schema: { type: integer }
+ *       - in: query
+ *         name: keeperId
+ *         schema: { type: integer }
+ *       - in: query
+ *         name: riskLevel
+ *         schema: { type: integer, minimum: 0, maximum: 5 }
+ *       - in: query
+ *         name: dateStart
+ *         schema: { type: string, format: date-time }
+ *       - in: query
+ *         name: dateEnd
+ *         schema: { type: string, format: date-time }
+ *       - in: query
+ *         name: page
+ *         schema: { type: integer }
+ *       - in: query
+ *         name: limit
+ *         schema: { type: integer }
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/PagedResponse_Observation' }
+ *       401: { description: Token requis }
+ *
+ *   post:
+ *     summary: Créer une observation (staff/admin)
+ *     tags: [Observations]
+ *     security: [{ bearerAuth: [] }]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema: { $ref: '#/components/schemas/ObservationCreate' }
+ *     responses:
+ *       201: { description: Créée }
+ *       401: { description: Token requis }
+ *       403: { description: Interdit (staff/admin) }
+ *       404: { description: Animal non trouvé }
+ *       422: { description: Données invalides }
+ */
+
+/**
+ * @swagger
+ * /api/observations/{id}:
+ *   get:
+ *     summary: Détail d'une observation
+ *     tags: [Observations]
+ *     security: [{ bearerAuth: [] }]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: integer }
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/Observation' }
+ *       401: { description: Token requis }
+ *       404: { description: Non trouvée }
+ *
+ *   put:
+ *     summary: Modifier une observation (auteur ou staff/admin)
+ *     tags: [Observations]
+ *     security: [{ bearerAuth: [] }]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: integer }
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema: { $ref: '#/components/schemas/ObservationUpdate' }
+ *     responses:
+ *       200: { description: Modifiée }
+ *       401: { description: Token requis }
+ *       403: { description: Interdit }
+ *       404: { description: Non trouvée }
+ *
+ *   delete:
+ *     summary: Supprimer une observation (admin)
+ *     tags: [Observations]
+ *     security: [{ bearerAuth: [] }]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: integer }
+ *     responses:
+ *       204: { description: Supprimée }
+ *       401: { description: Token requis }
+ *       403: { description: Interdit }
+ *       404: { description: Non trouvée }
+ */
+
+
 /**
  * PUT /api/observations/:id
  * Staff/admin, ou le keeper auteur

@@ -7,6 +7,115 @@ import { parsePagination, parseSort, pagedResponse } from "../utils/pagination.j
 const prisma = new PrismaClient();
 const router = Router();
 
+
+/**
+ * @swagger
+ * tags:
+ *   name: Enclosures
+ *   description: Gestion des enclos
+ */
+
+/**
+ * @swagger
+ * /api/enclosures:
+ *   get:
+ *     summary: Liste paginée des enclos
+ *     tags: [Enclosures]
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema: { type: integer }
+ *       - in: query
+ *         name: limit
+ *         schema: { type: integer }
+ *       - in: query
+ *         name: q
+ *         schema: { type: string }
+ *       - in: query
+ *         name: biome
+ *         schema: { type: string }
+ *       - in: query
+ *         name: sort
+ *         schema: { type: string, enum: [name, -name, createdAt, -createdAt] }
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/PagedResponse_Enclosure' }
+ *
+ *   post:
+ *     summary: Créer un enclos (staff/admin)
+ *     tags: [Enclosures]
+ *     security: [{ bearerAuth: [] }]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema: { $ref: '#/components/schemas/EnclosureCreate' }
+ *     responses:
+ *       201: { description: Créé }
+ *       401: { description: Token requis }
+ *       403: { description: Interdit (staff/admin) }
+ *       422: { description: Données invalides }
+ */
+
+/**
+ * @swagger
+ * /api/enclosures/{id}:
+ *   get:
+ *     summary: Détail d'un enclos
+ *     tags: [Enclosures]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: integer }
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/Enclosure' }
+ *       404: { description: Non trouvé }
+ *
+ *   put:
+ *     summary: Modifier un enclos (staff/admin)
+ *     tags: [Enclosures]
+ *     security: [{ bearerAuth: [] }]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: integer }
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema: { $ref: '#/components/schemas/EnclosureUpdate' }
+ *     responses:
+ *       200: { description: Modifié }
+ *       401: { description: Token requis }
+ *       403: { description: Interdit }
+ *       404: { description: Non trouvé }
+ *       422: { description: Données invalides }
+ *
+ *   delete:
+ *     summary: Supprimer un enclos (admin)
+ *     tags: [Enclosures]
+ *     security: [{ bearerAuth: [] }]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: integer }
+ *     responses:
+ *       204: { description: Supprimé }
+ *       401: { description: Token requis }
+ *       403: { description: Interdit (admin) }
+ *       404: { description: Non trouvé }
+ */
+
 /**
  * GET /api/enclosures
  * Query: page, limit, q (name), biome, sort (name|-createdAt)

@@ -15,6 +15,8 @@ import enclosuresRoutes from "./routes/enclosures.routes.js";
 import keepersRoutes from "./routes/keepers.routes.js";
 import observationsRoutes from "./routes/observations.routes.js";
 import { notFound, errorHandler } from "./middlewares/errorHandler.js";
+import { swaggerUi, swaggerSpec } from "./config/swagger.js";
+
 
 
 
@@ -46,7 +48,20 @@ app.use("/api/enclosures", enclosuresRoutes);
 app.use("/api/keepers", keepersRoutes);
 app.use("/api/observations", observationsRoutes);
 
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  customSiteTitle: "Zoo API Docs",
+}));
 
+/**
+ * @swagger
+ * /api/status:
+ *   get:
+ *     summary: Vérification de l'API
+ *     tags: [Status]
+ *     responses:
+ *       200:
+ *         description: OK
+ */
 
 
 app.get("/api/status", async (req, res) => {

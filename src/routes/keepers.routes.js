@@ -7,6 +7,141 @@ import { parsePagination, parseSort, pagedResponse } from "../utils/pagination.j
 const prisma = new PrismaClient();
 const router = Router();
 
+
+/**
+ * @swagger
+ * tags:
+ *   name: Keepers
+ *   description: Gestion des soigneurs (RBAC)
+ */
+
+/**
+ * @swagger
+ * /api/keepers:
+ *   get:
+ *     summary: Lister les soigneurs (admin)
+ *     tags: [Keepers]
+ *     security: [{ bearerAuth: [] }]
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema: { type: integer }
+ *       - in: query
+ *         name: limit
+ *         schema: { type: integer }
+ *       - in: query
+ *         name: q
+ *         schema: { type: string }
+ *       - in: query
+ *         name: role
+ *         schema: { type: string, enum: [user, staff, admin] }
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/PagedResponse_KeeperPublic' }
+ *       401: { description: Token requis }
+ *       403: { description: Interdit (admin) }
+ */
+
+/**
+ * @swagger
+ * /api/keepers/me:
+ *   get:
+ *     summary: Récupérer mon profil
+ *     tags: [Keepers]
+ *     security: [{ bearerAuth: [] }]
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/KeeperPublic' }
+ *       401: { description: Token requis }
+ */
+
+/**
+ * @swagger
+ * /api/keepers/{id}:
+ *   get:
+ *     summary: Récupérer un soigneur (admin ou soi-même)
+ *     tags: [Keepers]
+ *     security: [{ bearerAuth: [] }]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: integer }
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/KeeperPublic' }
+ *       401: { description: Token requis }
+ *       403: { description: Interdit }
+ *       404: { description: Non trouvé }
+ *
+ *   put:
+ *     summary: Modifier un soigneur (admin = tout ; sinon, soi-même champs limités)
+ *     tags: [Keepers]
+ *     security: [{ bearerAuth: [] }]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: integer }
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             oneOf:
+ *               - $ref: '#/components/schemas/KeeperUpdateSelf'
+ *               - $ref: '#/components/schemas/KeeperUpdateAdmin'
+ *     responses:
+ *       200: { description: Modifié }
+ *       401: { description: Token requis }
+ *       403: { description: Interdit }
+ *       404: { description: Non trouvé }
+ *
+ *   delete:
+ *     summary: Supprimer un soigneur (admin)
+ *     tags: [Keepers]
+ *     security: [{ bearerAuth: [] }]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: integer }
+ *     responses:
+ *       204: { description: Supprimé }
+ *       401: { description: Token requis }
+ *       403: { description: Interdit }
+ *       404: { description: Non trouvé }
+ */
+
+/**
+ * @swagger
+ * /api/keepers:
+ *   post:
+ *     summary: Créer un soigneur (admin)
+ *     tags: [Keepers]
+ *     security: [{ bearerAuth: [] }]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema: { $ref: '#/components/schemas/KeeperCreate' }
+ *     responses:
+ *       201: { description: Créé }
+ *       401: { description: Token requis }
+ *       403: { description: Interdit }
+ *       409: { description: Conflit email }
+ *       422: { description: Données invalides }
+ */
+
 /**
  * GET /api/keepers
  * Admin uniquement : listage + recherche
